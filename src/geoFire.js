@@ -26,9 +26,10 @@ var GeoFire = function(firebaseRef) {
    * @param {string|Object} keyOrLocations The key representing the location to add or a mapping of key - location pairs which
    * represent the locations to add.
    * @param {Array.<number>|undefined} location The [latitude, longitude] pair to add.
+   * @param {Object} data The data attributes that will be added to each key/location pair
    * @return {Promise.<>} A promise that is fulfilled when the write is complete.
    */
-  this.set = function(keyOrLocations, location) {
+  this.set = function(keyOrLocations, location, data) {
     var locations;
     if (typeof keyOrLocations === "string" && keyOrLocations.length !== 0) {
       // If this is a set for a single location, convert it into a object
@@ -57,6 +58,11 @@ var GeoFire = function(firebaseRef) {
 
         var geohash = encodeGeohash(location);
         newData[key] = encodeGeoFireObject(location, geohash);
+        for(var attrname in data) {
+          if (data[attrname] !== undefined) {
+            newData[key][attrname] = data[attrname];
+          }
+        }
       }
     });
 
